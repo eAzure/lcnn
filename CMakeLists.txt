@@ -4,11 +4,11 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
 enable_testing()
 
 add_subdirectory(3rdparty/googletest)
-include_directories(3rdparty/googletest/googletest/include)
-
 add_subdirectory(3rdparty/spdlog)
 
 add_subdirectory(tests)
