@@ -1,5 +1,3 @@
-set(GTEST_LIB gtest gtest_main)
-
 add_executable(test_gtest test_gtest.cc)
 target_link_libraries(test_gtest ${GTEST_LIB})
 
