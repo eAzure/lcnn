@@ -9,4 +9,6 @@ enable_testing()
 add_subdirectory(3rdparty/googletest)
 include_directories(3rdparty/googletest/googletest/include)
 
+add_subdirectory(3rdparty/spdlog)
+
 add_subdirectory(tests)
