@@ -12,6 +12,5 @@ include_directories(${EIGEN3_INCLUDE_DIRS})
 enable_testing()
 
 add_subdirectory(3rdparty/googletest)
-add_subdirectory(3rdparty/spdlog)
 
 add_subdirectory(tests)
