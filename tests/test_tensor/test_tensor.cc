@@ -352,3 +352,31 @@ TEST(test_tensor, tensor_element_multiply_2) {
         ASSERT_EQ(tensor3->index(i), 6.f);
     }
 }
+// 测试TensorPadding
+TEST(test_tensor, tensor_padding_transform) {
+    const auto& tensor = lcnn::TensorCreate(3, 4, 5);
+    ASSERT_EQ(tensor->channels(), 3);
+    ASSERT_EQ(tensor->rows(), 4);
+    ASSERT_EQ(tensor->cols(), 5);
+
+    tensor->Fill(1.f);
+    const std::shared_ptr<lcnn::Tensor<float>>& padding_tensor = lcnn::TensorPadding(tensor, {2, 2, 2, 2}, 2.f);
+
+    ASSERT_EQ(padding_tensor->rows(), 8);
+    ASSERT_EQ(padding_tensor->cols(), 9);
+
+    for (int c=0;c<padding_tensor->channels();c++) {
+        for (int h=0;h<padding_tensor->rows();h++) {
+            for (int w=0;w<padding_tensor->cols();w++) {
+                if (h<=1 || w<=1) {
+                    ASSERT_EQ(padding_tensor->at(c, h, w), 2.f);
+                } else if (h>=padding_tensor->rows()-2 || w>=padding_tensor->cols()-2) {
+                    ASSERT_EQ(padding_tensor->at(c, h, w), 2.f);
+                } else {
+                    ASSERT_EQ(padding_tensor->at(c, h, w), 1.f);
+                }
+            }
+        }
+    }
+
+}

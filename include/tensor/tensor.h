@@ -126,6 +126,9 @@ void TensorElementMultiply(
     const std::shared_ptr<Tensor<float>>& tensor1,
     const std::shared_ptr<Tensor<float>>& tensor2,
     const std::shared_ptr<Tensor<float>>& output);
+// TensorPadding
+std::shared_ptr<Tensor<float>> TensorPadding(const std::shared_ptr<Tensor<float>>& tensor,
+                                             const std::vector<uint32_t>& pads, float padding_value);
 
 } // namespace lcnn
 

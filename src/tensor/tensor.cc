@@ -189,7 +189,7 @@ void Tensor<float>::Fill(const std::vector<float>& values) {
 // 以常量1初始化张量
 void Tensor<float>::Ones() {
     assert(!this->_data.empty());
-    this->_data.fill(1.);
+    this->Fill(1.f);
 }
 // 随机初始化张量
 void Tensor<float>::Rand() {
@@ -452,6 +452,42 @@ void TensorElementMultiply(
         assert(new_tensor_1->shapes() == output->shapes());
         output->set_data(new_tensor_1->data() % new_tensor_2->data());
     }
+}
+// TensorPadding
+std::shared_ptr<Tensor<float>> TensorPadding(const std::shared_ptr<Tensor<float>>& tensor,
+                                             const std::vector<uint32_t>& pads, float padding_value) {
+    assert(tensor != nullptr && !tensor->empty());
+    assert(pads.size() == 4);
+
+    uint32_t pad_rows1 = pads.at(0); // up
+    uint32_t pad_rows2 = pads.at(1); // bottom
+    uint32_t pad_cols1 = pads.at(2); // left
+    uint32_t pad_cols2 = pads.at(3); // right
+
+    std::shared_ptr<Tensor<float>> output = std::make_shared<Tensor<float>>(tensor->channels(),
+                                                                            tensor->rows() + pad_rows1 + pad_rows2,
+                                                                            tensor->cols() + pad_cols1 + pad_cols2);
+
+    output->Fill(padding_value);
+
+    const uint32_t channels = tensor->channels();
+    for (uint32_t c=0;c<channels;c++) {
+        const arma::fmat& channel_mat = tensor->at(c);
+        arma::fmat& out_channel_mat = output->at(c);
+        const uint32_t channel_mat_width = channel_mat.n_cols;
+        const uint32_t channel_mat_height = channel_mat.n_rows;
+
+        for (uint32_t w=0;w<channel_mat_width;w++) {
+            float* output_channel_ptr = 
+                const_cast<float*>(out_channel_mat.colptr(w + pad_cols1));
+            const float* channel_ptr = channel_mat.colptr(w);
+            for (uint32_t h=0;h<channel_mat_height;h++) {
+                const float value = *(channel_ptr + h);
+                *(output_channel_ptr + pad_rows1 + h) = value;
+            }
+        }
+    }
+    return output;
 }
 
 } // namespace lcnn
