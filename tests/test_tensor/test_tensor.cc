@@ -257,3 +257,98 @@ TEST(test_tensor, tensor_clone) {
         ASSERT_EQ(clone_tensor->index(i), tensor.index(i));
     }
 }
+
+/********* 处理Tensor的相关库 *********/
+// 测试TensorCreate
+TEST(test_tensor, tensor_create) {
+    const std::shared_ptr<lcnn::Tensor<float>>& tensor_ptr1 = lcnn::TensorCreate(3, 224, 224);
+    ASSERT_EQ(tensor_ptr1->empty(), false);
+    ASSERT_EQ(tensor_ptr1->channels(), 3);
+    ASSERT_EQ(tensor_ptr1->rows(), 224);
+    ASSERT_EQ(tensor_ptr1->cols(), 224);
+
+    const std::shared_ptr<lcnn::Tensor<float>>& tensor_ptr2 = lcnn::TensorCreate({3, 224, 224});
+    ASSERT_EQ(tensor_ptr2->empty(), false);
+    ASSERT_EQ(tensor_ptr2->channels(), 3);
+    ASSERT_EQ(tensor_ptr2->rows(), 224);
+    ASSERT_EQ(tensor_ptr2->cols(), 224);
+}
+// 测试TensorIsSame
+TEST(test_tensor, tensor_is_same) {
+    std::shared_ptr<lcnn::Tensor<float>> tensor1 = std::make_shared<lcnn::Tensor<float>>(3, 32, 32);
+    tensor1->Fill(2.f);
+    std::shared_ptr<lcnn::Tensor<float>> tensor2 = std::make_shared<lcnn::Tensor<float>>(3, 32, 32);
+    tensor2->Fill(2.f);
+    std::shared_ptr<lcnn::Tensor<float>> tensor3 = std::make_shared<lcnn::Tensor<float>>(3, 32, 32);
+    tensor3->Fill(3.f);
+
+    ASSERT_EQ(lcnn::TensorIsSame(tensor1, tensor2), true);
+    ASSERT_EQ(lcnn::TensorIsSame(tensor1, tensor3), false);
+}
+// 测试TensorBroadCast
+TEST(test_tensor, tensor_broadcast) {
+    const std::shared_ptr<lcnn::Tensor<float>>& tensor1 =
+        lcnn::TensorCreate(3, 224, 224);
+    const std::shared_ptr<lcnn::Tensor<float>>& tensor2 =
+        lcnn::TensorCreate(3, 1, 1);
+    tensor2->Rand();
+    const auto& new_tensor_tuple = lcnn::TensorBroadCast(tensor1, tensor2);
+    const auto& new_tensor1 = std::get<0>(new_tensor_tuple);
+    const auto& new_tensor2 = std::get<1>(new_tensor_tuple);
+
+    ASSERT_EQ(new_tensor2->channels(), 3);
+    ASSERT_EQ(new_tensor2->rows(), 224);
+    ASSERT_EQ(new_tensor2->cols(), 224);
+
+    for (uint32_t c=0;c<tensor2->channels();c++) {
+        float temp = tensor2->index(c);
+        const auto& channel_data = new_tensor2->at(c);
+        for (uint32_t i=0;i<channel_data.size();i++) {
+            ASSERT_EQ(channel_data.at(i), temp);
+        }
+    }
+}
+// 测试TensorElementAdd
+TEST(test_tensor, tensor_element_add_1) {
+    const auto& tensor1 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    tensor1->Fill(1.f);
+    const auto& tensor2 = std::make_shared<lcnn::Tensor<float>>(3, 1, 1);
+    tensor2->Fill(2.f);
+    const auto& tensor3 = lcnn::TensorElementAdd(tensor1, tensor2);
+    for (int i=0;i<tensor3->size();i++) {
+        ASSERT_EQ(tensor3->index(i), 3.f);
+    }
+}
+TEST(test_tensor, tensor_element_add_2) {
+    const auto& tensor1 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    tensor1->Fill(2.f);
+    const auto& tensor2 = std::make_shared<lcnn::Tensor<float>>(3, 1, 1);
+    tensor2->Fill(3.f);
+    const auto& tensor3 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    lcnn::TensorElementAdd(tensor1, tensor2, tensor3);
+    for (int i=0;i<tensor3->size();i++) {
+        ASSERT_EQ(tensor3->index(i), 5.f);
+    }
+}
+// 测试TensorElementMultiply
+TEST(test_tensor, tensor_element_multiply_1) {
+    const auto& tensor1 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    tensor1->Fill(2.f);
+    const auto& tensor2 = std::make_shared<lcnn::Tensor<float>>(3, 1, 1);
+    tensor2->Fill(3.f);
+    const auto& tensor3 = lcnn::TensorElementMultiply(tensor1, tensor2);
+    for (int i=0;i<tensor3->size();i++) {
+        ASSERT_EQ(tensor3->index(i), 6.f);
+    }
+}
+TEST(test_tensor, tensor_element_multiply_2) {
+    const auto& tensor1 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    tensor1->Fill(2.f);
+    const auto& tensor2 = std::make_shared<lcnn::Tensor<float>>(3, 1, 1);
+    tensor2->Fill(3.f);
+    const auto& tensor3 = std::make_shared<lcnn::Tensor<float>>(3, 224, 224);
+    lcnn::TensorElementMultiply(tensor1, tensor2, tensor3);
+    for (int i=0;i<tensor3->size();i++) {
+        ASSERT_EQ(tensor3->index(i), 6.f);
+    }
+}

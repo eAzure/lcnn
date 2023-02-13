@@ -98,6 +98,35 @@ private:
     arma::fcube _data;
 };
 
+/********* 处理Tensor的相关库函数 *********/
+// 创建Tensor
+std::shared_ptr<Tensor<float>> TensorCreate(uint32_t channels, uint32_t rows, uint32_t cols);
+std::shared_ptr<Tensor<float>> TensorCreate(const std::vector<uint32_t> &shapes);
+// 判断两Tensor 数值是否相同
+bool TensorIsSame(const std::shared_ptr<Tensor<float>> &tensor1,
+                  const std::shared_ptr<Tensor<float>> &tensor2);
+
+// 实现广播，将两Tensor按照广播机制调整到相同尺寸
+std::tuple<std::shared_ptr<Tensor<float>>, std::shared_ptr<Tensor<float>>> 
+    TensorBroadCast(const std::shared_ptr<Tensor<float>>& tensor1,
+                    const std::shared_ptr<Tensor<float>>& tensor2);
+// Tensor Elementwise 加
+std::shared_ptr<Tensor<float>> TensorElementAdd(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2);
+void TensorElementAdd(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2,
+    const std::shared_ptr<Tensor<float>>& output);
+// Tensor Elementwise 相乘
+std::shared_ptr<Tensor<float>> TensorElementMultiply(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2);
+void TensorElementMultiply(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2,
+    const std::shared_ptr<Tensor<float>>& output);
+
 } // namespace lcnn
 
 #endif // _LCNN_TENSOR_H

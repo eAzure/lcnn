@@ -318,4 +318,140 @@ std::shared_ptr<Tensor<float>> Tensor<float>::Clone() {
     return std::make_shared<Tensor>(*this);
 }
 
+/********* 处理Tensor的相关库 *********/
+// 创建Tensor
+std::shared_ptr<Tensor<float>> TensorCreate(uint32_t channels, uint32_t rows,
+                                            uint32_t cols) {
+    return std::make_shared<Tensor<float>>(channels, rows, cols);
+}
+std::shared_ptr<Tensor<float>> TensorCreate(const std::vector<uint32_t>& shapes) {
+    assert(shapes.size() == 3);
+    return TensorCreate(shapes.at(0), shapes.at(1), shapes.at(2));
+}
+// 判断两tensor 数值是否相同
+bool TensorIsSame(const std::shared_ptr<Tensor<float>>& tensor1,
+                  const std::shared_ptr<Tensor<float>>& tensor2) {
+    assert(tensor1 != nullptr);
+    assert(tensor2 != nullptr);
+    if (tensor1->shapes() != tensor2->shapes()) {
+        return false;
+    }
+    bool is_same = arma::approx_equal(tensor1->data(), tensor2->data(), "absdiff", 1e-5);
+    return is_same;
+}
+// 实现广播，将两Tensor按照广播机制调整到相同尺寸
+// TODO: 更改现有规则
+/**
+ * 现有规则：
+ * channel相同，然后有一方的row和col均为1
+*/
+std::tuple<std::shared_ptr<Tensor<float>>, std::shared_ptr<Tensor<float>>> 
+    TensorBroadCast(const std::shared_ptr<Tensor<float>>& tensor1,
+                    const std::shared_ptr<Tensor<float>>& tensor2) {
+    assert(tensor1 != nullptr && tensor2 != nullptr);
+    if (tensor1->shapes() == tensor2->shapes()) {
+        return {tensor1, tensor2};
+    } else {
+        assert(tensor1->channels() == tensor2->channels());
+        if (tensor1->rows() == 1 && tensor1->rows() == 1) {
+            std::shared_ptr<Tensor<float>> new_tensor1 = 
+                TensorCreate(tensor1->channels(), tensor2->rows(), tensor2->cols());
+            for (uint32_t c=0;c<tensor1->channels();c++) {
+                new_tensor1->at(c).fill(tensor1->index(c));
+            }
+            return {new_tensor1, tensor2};
+        } else if (tensor2->rows() == 1 && tensor2->cols() == 1) {
+            std::shared_ptr<Tensor<float>> new_tensor2 = 
+                TensorCreate(tensor2->channels(), tensor1->rows(), tensor1->cols());
+            for (uint32_t c=0;c<tensor2->channels();c++) {
+                new_tensor2->at(c).fill(tensor2->index(c));
+            }
+            return {tensor1, new_tensor2};
+        } else {
+            std::cout << "----现有广播规则不支持！" << std::endl;
+            return {nullptr, nullptr};
+        }
+    }
+}
+// Tensor Elementwise 加
+std::shared_ptr<Tensor<float>> TensorElementAdd(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2) {
+    assert(tensor1 != nullptr && tensor2 != nullptr);
+    if (tensor1->shapes() == tensor2->shapes()) {
+        std::shared_ptr<Tensor<float>> output_tensor =
+            TensorCreate(tensor1->shapes());
+        output_tensor->set_data(tensor1->data() + tensor2->data());
+        return output_tensor;
+    } else {
+        // need broadcast
+        const auto& tuple_tensor = TensorBroadCast(tensor1, tensor2);
+        const auto& new_tensor_1 = std::get<0>(tuple_tensor);
+        const auto& new_tensor_2 = std::get<1>(tuple_tensor);
+        if (new_tensor_1 == nullptr || new_tensor_2 == nullptr) return nullptr;
+        std::shared_ptr<Tensor<float>> output_tensor = 
+            TensorCreate(new_tensor_1->shapes());
+        output_tensor->set_data(new_tensor_1->data() + new_tensor_2->data());
+        return output_tensor;
+    }
+}
+void TensorElementAdd(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2,
+    const std::shared_ptr<Tensor<float>>& output) {
+    assert(tensor1 != nullptr && tensor2 != nullptr && output != nullptr);
+    if (tensor1->shapes() == tensor2->shapes()) {
+        assert(tensor1->shapes() == output->shapes());
+        output->set_data(tensor1->data() + tensor2->data());
+    } else {
+        // need broadcast
+        const auto& tuple_tensor = TensorBroadCast(tensor1, tensor2);
+        const auto& new_tensor_1 = std::get<0>(tuple_tensor);
+        const auto& new_tensor_2 = std::get<1>(tuple_tensor);
+        assert(new_tensor_1->shapes() == output->shapes());
+        output->set_data(new_tensor_1->data() + new_tensor_2->data());
+    }
+}
+// Tensor Elementwise 相乘
+std::shared_ptr<Tensor<float>> TensorElementMultiply(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2) {
+
+    assert(tensor1 != nullptr && tensor2 != nullptr);
+    if (tensor1->shapes() == tensor2->shapes()) {
+        std::shared_ptr<Tensor<float>> output_tensor =
+            TensorCreate(tensor1->shapes());
+        output_tensor->set_data(tensor1->data() % tensor2->data());
+        return output_tensor;
+    } else {
+        // need broadcast
+        const auto& tuple_tensor = TensorBroadCast(tensor1, tensor2);
+        const auto& new_tensor_1 = std::get<0>(tuple_tensor);
+        const auto& new_tensor_2 = std::get<1>(tuple_tensor);
+        if (new_tensor_1 == nullptr || new_tensor_2 == nullptr) return nullptr;
+        std::shared_ptr<Tensor<float>> output_tensor = 
+            TensorCreate(new_tensor_1->shapes());
+        output_tensor->set_data(new_tensor_1->data() % new_tensor_2->data());
+        return output_tensor;
+    }
+}
+void TensorElementMultiply(
+    const std::shared_ptr<Tensor<float>>& tensor1,
+    const std::shared_ptr<Tensor<float>>& tensor2,
+    const std::shared_ptr<Tensor<float>>& output) {
+
+    assert(tensor1 != nullptr && tensor2 != nullptr && output != nullptr);
+    if (tensor1->shapes() == tensor2->shapes()) {
+        assert(tensor1->shapes() == output->shapes());
+        output->set_data(tensor1->data() % tensor2->data());
+    } else {
+        // need broadcast
+        const auto& tuple_tensor = TensorBroadCast(tensor1, tensor2);
+        const auto& new_tensor_1 = std::get<0>(tuple_tensor);
+        const auto& new_tensor_2 = std::get<1>(tuple_tensor);
+        assert(new_tensor_1->shapes() == output->shapes());
+        output->set_data(new_tensor_1->data() % new_tensor_2->data());
+    }
+}
+
 } // namespace lcnn
