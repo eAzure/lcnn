@@ -25,6 +25,7 @@ TEST(test_tensor, tensor_construct2) {
 
 TEST(test_tensor, tensor_copy_construct) {
     lcnn::Tensor<float> f1(3, 224, 224);
+    f1.Rand();
     lcnn::Tensor<float> f2(f1);
     ASSERT_EQ(f2.channels(), 3);
     ASSERT_EQ(f2.rows(), 224);
@@ -40,6 +41,7 @@ TEST(test_tensor, tensor_copy_construct) {
 
 TEST(test_tensor, tensor_copy_assignment) {
     lcnn::Tensor<float> f1(3, 224, 224);
+    f1.Rand();
     lcnn::Tensor<float> f2(3, 2, 1);
     f2 = f1;
     ASSERT_EQ(f2.channels(), 3);
