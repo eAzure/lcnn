@@ -12,6 +12,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
+// link: https://github.com/Tencent/ncnn/blob/master/tools/pnnx/src/storezip.cpp
+
 #include "pnnx_ir/storezip.h"
 
 #include <stdio.h>
