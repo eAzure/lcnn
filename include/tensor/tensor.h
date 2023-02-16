@@ -130,6 +130,11 @@ void TensorElementMultiply(
 std::shared_ptr<Tensor<float>> TensorPadding(const std::shared_ptr<Tensor<float>>& tensor,
                                              const std::vector<uint32_t>& pads, float padding_value);
 
+// 类型简化
+using floatTensor = Tensor<float>;
+using sptrFloatTensor = std::shared_ptr<Tensor<float>>;
+
+
 } // namespace lcnn
 
 #endif // _LCNN_TENSOR_H
