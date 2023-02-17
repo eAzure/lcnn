@@ -16,4 +16,12 @@ TEST(test_op, test_op_relu) {
   const auto status = relu_op.Forward(inputs, outputs);
   ASSERT_EQ(status, lcnn::InferStatus::kInferSuccess);
 
+  for (int i=0;i<inputs.size();i++) {
+    std::shared_ptr<lcnn::Tensor<float>> input_data = inputs.at(i);
+    input_data->Transform([](const float val) {
+      return val > 0. ? val:0.;
+    });
+    std::shared_ptr<lcnn::Tensor<float>> output_data = outputs.at(i);
+    ASSERT_EQ(lcnn::TensorIsSame(input_data, output_data), true);
+  }
 }
