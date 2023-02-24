@@ -4,6 +4,8 @@
 */
 
 #include "ir/op/ops/relu.h"
+#include "ir/op/op_register.h"
+
 namespace lcnn {
 
 InferStatus ReluOp::Forward(const std::vector<std::shared_ptr<Tensor<float>>> &inputs,
@@ -47,5 +49,20 @@ InferStatus ReluOp::Forward(const std::vector<std::shared_ptr<Tensor<float>>> &i
 
     return InferStatus::kInferSuccess;
 }
+
+// op Creator
+ParseParameterAttrStatus ReluOp::GetInstance(const std::shared_ptr<Operator> &con_operator,
+                                             std::shared_ptr<Op> &relu_op) {
+    if (con_operator == nullptr) {
+        std::cout << "[Error] Relu operator is nullptr";
+        return ParseParameterAttrStatus::kParameterMissingUnknown;
+    }
+    relu_op = std::make_shared<ReluOp>();
+    return ParseParameterAttrStatus::kParameterAttrParseSuccess;
+}
+
+// 前面定义的是op_type，后面定义的是Creator方法，由此便将op_type与op对应的创建方法绑定到了一起
+OpRegistererWrapper kReluGetInstance("nn.Relu", ReluOp::GetInstance);
+
 
 } // namespace lcnn
