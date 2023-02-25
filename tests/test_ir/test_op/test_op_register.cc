@@ -16,11 +16,11 @@ TEST(test_op, test_op_register_registry) {
 
 // 测试operator中对应的op生成
 TEST(test_op, test_op_register_generateop) {
-    const auto &registery = lcnn::OpRegisterer::Registry();
+    const auto &registry = lcnn::OpRegisterer::Registry();
     
     std::shared_ptr<lcnn::Operator> runtime_operator = std::make_shared<lcnn::Operator>();
     runtime_operator->name = "relu";
-    runtime_operator->type = "nn.Relu";
+    runtime_operator->type = "nn.Relu"; // 这里必须和注册表中注册的一致
 
     std::shared_ptr<lcnn::Op> relu_op = lcnn::OpRegisterer::CreateOp(runtime_operator);
     runtime_operator->op = relu_op;
@@ -38,7 +38,7 @@ TEST(test_op, test_op_register_generateop) {
     for (int i=0;i<inputs.size();i++) {
         std::shared_ptr<lcnn::Tensor<float>> input_data = inputs.at(i);
         input_data->Transform([](const float val) {
-        return val > 0. ? val:0.;
+            return val > 0. ? val:0.;
         });
         std::shared_ptr<lcnn::Tensor<float>> output_data = outputs.at(i);
         ASSERT_EQ(lcnn::TensorIsSame(input_data, output_data), true);
