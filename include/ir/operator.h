@@ -27,6 +27,7 @@ struct Operator
     // 输出节点名称
     std::string output_name;
     // 输出操作数
+    // TODO(这里是否要考虑输出操作数是vector)
     std::shared_ptr<Operand> output_operand;
     // 输入操作数
     std::map<std::string, std::shared_ptr<Operand>> input_operands; // 输入操作数
