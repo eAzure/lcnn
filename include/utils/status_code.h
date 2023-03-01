@@ -16,6 +16,8 @@ enum class InferStatus {
     
     kInferFailedInputEmpty = 1, // 输入feature为空
     kInferFailedInputOutputSizeNotEqual = 2, // 输入输出size不相等
+    kInferFailedExpressionParserIsNull = 3, // expression op的parser为空
+    kInferFailed = 4, // 推理失败统一状态
 
 };
 
@@ -23,6 +25,9 @@ enum class InferStatus {
 enum class ParseParameterAttrStatus {
     kParameterMissingUnknown = -1,
     kParameterAttrParseSuccess = 0, // 解析成功
+
+    // 缺少某些参数
+    kParameterMissingExpr = 1, // 缺少expr参数
 };
 
 } // namespace lcnn

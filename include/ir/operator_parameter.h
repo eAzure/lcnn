@@ -1,6 +1,6 @@
 /**
  * operator_parameter.h
- * 算子节点参数，如stride padding
+ * 算子节点参数，如stride padding，还有expression op中的expr参数等
  * [by lgx 2023-02-25]
 */
 
@@ -31,6 +31,13 @@ struct OperatorParameterFloat : public OperatorParameter
 {
     OperatorParameterFloat() : OperatorParameter(OperatorParameterType::kTypeFloat) {}
     float value = 0.f;
+};
+
+// 对应string类型
+struct OperatorParameterString : public OperatorParameter
+{
+    OperatorParameterString() : OperatorParameter(OperatorParameterType::kTypeString) {}
+    std::string value = "";
 };
 
 

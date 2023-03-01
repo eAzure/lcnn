@@ -20,7 +20,8 @@ enum class OperatorParameterType {
     kTypeUnknown = 0, // 类型未知
     kTypeBool = 1, // bool
     kTypeInt = 2, // int
-    kTypeFloat = 3 // float
+    kTypeFloat = 3, // float
+    kTypeString = 4, // string
 };
 
 } // namespace lcnn
