@@ -51,7 +51,7 @@ struct TokenNode
     std::shared_ptr<TokenNode> right = nullptr; // 右节点
     
     TokenNode(int32_t num_index, std::shared_ptr<TokenNode> left, std::shared_ptr<TokenNode> right)
-        : num_index(num_index), left(std::move(left)), right(std::move(right)) {}
+        : num_index(num_index), left(left), right(right) {}
     TokenNode() = default;
 };
 
