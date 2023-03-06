@@ -20,7 +20,7 @@ TEST(test_op, test_op_register_generateop) {
     
     std::shared_ptr<lcnn::Operator> runtime_operator = std::make_shared<lcnn::Operator>();
     runtime_operator->name = "relu";
-    runtime_operator->type = "nn.Relu"; // 这里必须和注册表中注册的一致
+    runtime_operator->type = "nn.ReLU"; // 这里必须和注册表中注册的一致
 
     std::shared_ptr<lcnn::Op> relu_op = lcnn::OpRegisterer::CreateOp(runtime_operator);
     runtime_operator->op = relu_op;

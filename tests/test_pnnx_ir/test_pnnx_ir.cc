@@ -7,8 +7,9 @@
 #include "pnnx_ir/ir.h"
 
 TEST(test_pnnx_ir, test_pnnx) {
-    const std::string &param_path = "/home/lcnn/lcnn/tests/resources/add/resnet_add.pnnx.param";
-    const std::string &weight_path = "/home/lcnn/lcnn/tests/resources/add/resnet_add.pnnx.bin";
+    // update path to your path(absolute path)
+    const std::string &param_path = "/home/lcnn/lcnn/tests/resources/relu_add/model.pnnx.param";
+    const std::string &weight_path = "/home/lcnn/lcnn/tests/resources/relu_add/model.pnnx.bin";
 
     std::unique_ptr<pnnx::Graph> graph = std::make_unique<pnnx::Graph>();
     int load_result = graph->load(param_path, weight_path);

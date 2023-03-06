@@ -62,7 +62,7 @@ ParseParameterAttrStatus ReluOp::GetInstance(const std::shared_ptr<Operator> &co
 }
 
 // 前面定义的是op_type，后面定义的是OpCreator方法，由此便将op_type与op对应的创建方法绑定到了一起
-OpRegistererWrapper kReluGetInstance("nn.Relu", ReluOp::GetInstance);
+OpRegistererWrapper kReluGetInstance("nn.ReLU", ReluOp::GetInstance);
 
 
 } // namespace lcnn
