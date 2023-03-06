@@ -16,7 +16,7 @@ struct OperatorAttribute
     // 权重信息 char类型，之后通过get转换为对应的计算类型
     std::vector<char> weight_data;
     // Operator节点shape信息
-    std::vector<uint32_t> shape;
+    std::vector<int32_t> shape;
     // 节点数据类型信息
     OperandDataType type = OperandDataType::kTypeUnknown;
 

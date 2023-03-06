@@ -17,7 +17,7 @@ struct Operand
     // 操作数名称
     std::string name;
     // 操作数形状
-    std::vector<uint32_t> shapes;
+    std::vector<int32_t> shape;
     // 对应的Tensor数据
     std::vector<std::shared_ptr<Tensor<float>>> datas;
     // 操作数类型

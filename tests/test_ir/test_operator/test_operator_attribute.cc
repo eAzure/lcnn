@@ -29,7 +29,7 @@ TEST(test_operator, attribute_weight_data_get) {
 TEST(test_operator, attribute_shape) {
     lcnn::OperatorAttribute operator_attr;
     operator_attr.type = lcnn::OperandDataType::kTypeFloat32;
-    operator_attr.shape = std::vector<uint32_t>{3, 32, 32};
+    operator_attr.shape = std::vector<int32_t>{3, 32, 32};
     ASSERT_EQ(operator_attr.shape.at(0), 3);
     ASSERT_EQ(operator_attr.shape.at(1), 32);
     ASSERT_EQ(operator_attr.shape.at(2), 32);
