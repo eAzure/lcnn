@@ -22,6 +22,9 @@ enum class OperatorParameterType {
     kTypeInt = 2, // int
     kTypeFloat = 3, // float
     kTypeString = 4, // string
+    kTypeIntArray = 5, // array<int>
+    kTypeFloatArray = 6, // array<float>
+    kTypeStringArray = 7, // array<string>
 };
 
 } // namespace lcnn

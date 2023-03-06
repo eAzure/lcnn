@@ -19,6 +19,13 @@ struct OperatorParameter
     OperatorParameterType type = OperatorParameterType::kTypeUnknown;
 };
 
+// 对应bool类型
+struct OperatorParameterBool : public OperatorParameter
+{
+    OperatorParameterBool() : OperatorParameter(OperatorParameterType::kTypeBool) {}
+    bool value = false;
+};
+
 // 对应int类型
 struct OperatorParameterInt : public OperatorParameter
 {
@@ -38,6 +45,27 @@ struct OperatorParameterString : public OperatorParameter
 {
     OperatorParameterString() : OperatorParameter(OperatorParameterType::kTypeString) {}
     std::string value = "";
+};
+
+// 对应array<int>类型
+struct OperatorParameterIntArray : public OperatorParameter
+{
+    OperatorParameterIntArray() : OperatorParameter(OperatorParameterType::kTypeIntArray) {}
+    std::vector<int> value;
+};
+
+// 对应array<float>类型
+struct OperatorParameterFloatArray : public OperatorParameter
+{
+    OperatorParameterFloatArray() : OperatorParameter(OperatorParameterType::kTypeFloatArray) {}
+    std::vector<float> value;
+};
+
+// 对应array<string>类型
+struct OperatorParameterStringArray : public OperatorParameter
+{
+    OperatorParameterStringArray() : OperatorParameter(OperatorParameterType::kTypeStringArray) {}
+    std::vector<std::string> value; 
 };
 
 
