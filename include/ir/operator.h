@@ -25,11 +25,10 @@ struct Operator
 
     // 操作数相关
     // 输出节点名称
-    std::string output_name;
+    std::vector<std::string> output_names;
     // 输出操作数
-    // TODO(这里是否要考虑输出操作数是vector)
     std::shared_ptr<Operand> output_operand;
-    // 输入操作数
+    // 输入操作数，string代表producer op->name
     std::map<std::string, std::shared_ptr<Operand>> input_operands; // 输入操作数
     // 输入操作数序列
     std::vector<std::shared_ptr<Operand>> input_operands_seq; // 输入操作数序列
