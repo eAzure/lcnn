@@ -14,11 +14,14 @@
 
 namespace lcnn {
 
+// class Op;
 struct Operator
 {
     std::string name; // 计算节点名称 如conv1
     std::string type; // 计算节点对应的类型 如nn.Conv2d
     std::shared_ptr<Op> op; // 对应的具体计算op
+
+    bool has_forward = false; // 用于生成计算图中的算子拓扑序，代表该算子是否forward（计算过）
 
     // 输出Operator节点名字对应关系
     std::map<std::string, std::shared_ptr<Operator>> output_operators;
