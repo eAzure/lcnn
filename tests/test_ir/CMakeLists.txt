@@ -1,2 +1,3 @@
 add_subdirectory(test_op)
 add_subdirectory(test_operator)
+add_subdirectory(test_graph)
